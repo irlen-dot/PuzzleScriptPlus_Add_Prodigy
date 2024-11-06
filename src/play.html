@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="description" content="A game made with the PuzzleScript Plus game engine.">
-<title>PuzzleScript Plus Game</title>
+<meta name="description" content="A game made with the Irlen's PuzzleScript Plus game engine.">
+<title>Irlen's Puzzle Plus version</title>
 <style>
 body {
 	background-color:black;
@@ -263,6 +263,54 @@ a {
 <script src="js/mobile.js"></script>
 <!--ENDREPLACE-->
 
+
+<!-- Add this near the top of the body in both editor.html and play.html -->
+<audio id="gameAudio" src="../assets/background.mp3" loop></audio>
+
+<!-- Add this script right after the audio element -->
+<script>
+    // Try to play audio as soon as possible
+    // Create audio context and elements
+    // Try to play audio as soon as possible
+    document.addEventListener('DOMContentLoaded', function() {
+        const audio = document.getElementById('gameAudio');
+        
+        // Function to start audio
+        function startAudio() {
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    // Auto-play was prevented
+                    // Will try again on first interaction
+                });
+            }
+        }
+
+        // Try to start audio immediately
+        startAudio();
+
+        // Start audio on first keypress
+        document.addEventListener('keydown', function startOnKeypress(event) {
+            startAudio();
+            // Remove the keypress listener after first interaction
+            document.removeEventListener('keydown', startOnKeypress);
+        }, { once: true });
+
+        // Optional: Add specific key checking if you want only certain keys to trigger
+        /*
+        document.addEventListener('keydown', function startOnKeypress(event) {
+            // Example: only start on arrow keys or WASD
+            const validKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 
+                             'w', 'a', 's', 'd', 'W', 'A', 'S', 'D'];
+            if (validKeys.includes(event.key)) {
+                startAudio();
+                document.removeEventListener('keydown', startOnKeypress);
+            }
+        }, { once: true });
+        */
+    });
+</script>
+
 <script>
 
 function displayError(message) {
@@ -284,10 +332,12 @@ function strip_http(url) {
 
 function getData(){ 
 	var id = getParameterByName("p").replace(/[\\\/]/,"");
+    id = "832006ee62d554889890d7fa15672484"
 	if (id===null||id.length===0) {
 		displayError("No ID specified in URL.")
 		return;
 	}
+
 
 	var githubURL = 'https://api.github.com/gists/'+id;
 
